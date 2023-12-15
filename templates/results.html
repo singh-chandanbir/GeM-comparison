@@ -1,24 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GeM Comparison Portal</title>
-</head>
-<body>
-   
+{% extends "layout.html" %}
+
+{% block body %}
+ 
     <button><a href="{{ url_for('landing') }}">Back</a></button>
     <br>
     <h2>You Searched For : {{searchquery}}</h2>
     <h3>Here are the results </h3>
     <hr>
     <hr>
-    {% set limit = category|length %}
-    {% for i in range(limit) %}
+    {% for category, subcategories in category_dict.items() %}
     <results>
-        <h3> {{ category[i] }}</h1>
+        <h3> {{ category }}</h1>
         <ul>
-            {% for sub in subcategory[i] %}
+            {% for sub in subcategories %}
                 <li>{{ sub }}</li>
             {% endfor %}
             
@@ -28,6 +22,4 @@
     {% endfor %}
     <br>
     <hr>
-
-</body>
-</html>
+{% endblock body %}
