@@ -8,18 +8,18 @@
     <h3>Here are the results </h3>
     <hr>
     <hr>
-    {% for category, subcategories in category_dict.items() %}
-    <results>
-        <h3> {{ category }}</h1>
-        <ul>
-            {% for sub in subcategories %}
-                <li>{{ sub }}</li>
-            {% endfor %}
-            
-        </ul>     
-    </results>
-        
-    {% endfor %}
+        {% for productlist in product2dlist %}
+        <results>
+            <ol>
+                {% for product in productlist %}
+                <li>
+                    {{ product.text }}
+                </li>
+                {% endfor %}
+                <hr>
+            </ol>   
+        </results>
+        {% endfor %}  
     <br>
     <hr>
 {% endblock body %}
