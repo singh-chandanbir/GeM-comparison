@@ -14,7 +14,8 @@ def landing():
 def result():
     query = request.form.get("searchquery")
     gemproductlist = gem_products(query)
-    return rt('results.html', searchquery = query, gemproductlist = gemproductlist)
+    table_headers = ['Title', 'Brand', 'Min Quantity', 'List Price', 'Final Price', 'Image Link', 'Product Link']
+    return rt('results.html', searchquery = query, gemproductlist = gemproductlist, table_headers = table_headers)
 
 if __name__ == '__main__':
     app.run(debug=True)

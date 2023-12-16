@@ -12,11 +12,11 @@ def get_product_details(product):
     title = product.find('span', class_='variant-title')
     
     if title:
-        details_dict['product_title'] = title.text
+        details_dict['product_title'] = title.text.strip()
         details_dict['product_brand'] = product.find('div', class_='variant-brand').text.replace('Brand:', '') if product.find('div', class_='variant-brand') else ''
         details_dict['product_min_qty'] = product.find('div', class_='variant-moq').text.replace('Min. Qty. Per Consignee:', '') if product.find('div', class_='variant-moq') else ''
-        details_dict['product_final_price'] = product.find('span', class_='variant-list-price').text if product.find('span', class_='variant-list-price') else ''
         details_dict['product_list_price'] = product.find('span', class_='variant-final-price').text if product.find('span', class_='variant-final-price') else ''
+        details_dict['product_final_price'] = product.find('span', class_='variant-list-price').text if product.find('span', class_='variant-list-price') else ''
         image_link = product.find('span', class_='responsive').find('img')['src']
         details_dict['product_image_link'] = image_link
         product_link = product.find('a', href=True)['href']

@@ -8,22 +8,24 @@
     <h3>Here are the results </h3>
     <hr>
     <hr>
-    <ol>
-        {% for product in gemproductlist %}
-        <results>
-            <li>
-                <ul>
-                    {% for key, value in product.items() %}
-                    <li>
-                        {{ key }} : {{ value }}
-                    </li>
-                    {% endfor %}
-                    <hr>
-                </ul>
-            </li>   
-        </results>
-        {% endfor %}  
-    </ol>
+    <results>
+        <table>
+            <tr>
+                {% for title in table_headers %}
+                    <th> {{ title }} </th>
+                {% endfor %}
+            </tr>    
+            {% for product in gemproductlist %}
+            <tr>
+                {% for value in product.values() %}
+                    <td>
+                        {{ value }}
+                    </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    </results>
     <br>
     <hr>
 {% endblock body %}
