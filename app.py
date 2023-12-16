@@ -1,5 +1,5 @@
 from flask import Flask,render_template as rt,session, redirect, url_for, request
-from api.gemProducts import getProducts
+from api.gemProducts import get_products
 app = Flask(__name__)
 
 app.secret_key = 'BCQWR#$@@WE@12332423@121'
@@ -13,8 +13,8 @@ def landing():
 @app.route('/result', methods = ["POST"])
 def result():
     query = request.form.get("searchquery")
-    productlist = getProducts(query)
-    return rt('results.html', searchquery = query, product2dlist = productlist)
+    productlist = get_products(query)
+    return rt('results.html', searchquery = query, productlist = productlist)
 
 if __name__ == '__main__':
     app.run(debug=True)

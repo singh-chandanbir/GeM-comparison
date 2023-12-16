@@ -8,18 +8,22 @@
     <h3>Here are the results </h3>
     <hr>
     <hr>
-        {% for productlist in product2dlist %}
+    <ol>
+        {% for details in productlist %}
         <results>
-            <ol>
-                {% for product in productlist %}
-                <li>
-                    {{ product.text }}
-                </li>
-                {% endfor %}
-                <hr>
-            </ol>   
+            <li>
+                <ul>
+                    {% for key, value in details.items() %}
+                    <li>
+                        {{ key }} : {{ value }}
+                    </li>
+                    {% endfor %}
+                    <hr>
+                </ul>
+            </li>   
         </results>
         {% endfor %}  
+    </ol>
     <br>
     <hr>
 {% endblock body %}
