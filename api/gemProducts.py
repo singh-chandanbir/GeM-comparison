@@ -17,6 +17,10 @@ def get_product_details(product):
         details_dict['product_min_qty'] = product.find('div', class_='variant-moq').text.replace('Min. Qty. Per Consignee:', '') if product.find('div', class_='variant-moq') else ''
         details_dict['product_final_price'] = product.find('span', class_='variant-list-price').text if product.find('span', class_='variant-list-price') else ''
         details_dict['product_list_price'] = product.find('span', class_='variant-final-price').text if product.find('span', class_='variant-final-price') else ''
+        image_link = product.find('span', class_='responsive').find('img')['src']
+        details_dict['product_image_link'] = image_link
+        product_link = product.find('a', href=True)['href']
+        details_dict['product_link'] = f"https://mkp.gem.gov.in{product_link}"
         return details_dict
     
     return None
@@ -36,7 +40,7 @@ def process_page(link, page_number):
             product_detail_list.append(details_dict)
     return product_detail_list
 
-def get_products(query):
+def gem_products(query):
     product_detail_list = []
     product_pages = getPages(query)
     

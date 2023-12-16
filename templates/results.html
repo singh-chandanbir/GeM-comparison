@@ -9,11 +9,11 @@
     <hr>
     <hr>
     <ol>
-        {% for details in productlist %}
+        {% for product in gemproductlist %}
         <results>
             <li>
                 <ul>
-                    {% for key, value in details.items() %}
+                    {% for key, value in product.items() %}
                     <li>
                         {{ key }} : {{ value }}
                     </li>
