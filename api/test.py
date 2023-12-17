@@ -1,66 +1,49 @@
-import concurrent.futures
-import requests
-from bs4 import BeautifulSoup as BS
-from gemPages import getPages
-import time
+from bs4 import BeautifulSoup
 
-def fetch_page_content(url):
-    response = requests.get(url)
-    return response.text if response.status_code == 200 else None
+html_content = '''
+<div id="content-slot">      
+    <div class=" row">
+        <div class="page-content col-md-12 col-sm-12">
+            <div class="relevant-categories">
+                <h3 class="category-search-title">Category Results for: "shampoo"</h3>
+                <div class="header">
+                    <h1>Keywords searched by you appear in following categories, please click on the category name to look at relevant products:</h1>
+                    <div class="note-block">
+                        <p class="note">Uploading of wrong or misleading product in category not relevant for that product is strictly prohibited and such sellers are liable for strict Administrative action as per GeM GTC clause 3 (A) (xiii). Buyers are also warned not to place contracts against such items listed in wrong or irrelevant categories since all such contract shall be treated as null and void as per GeM GTC. </p>
+                    </div>
+                </div>
+                <ul class="clearfix">
+                    <li class="bn-group">
+                        <strong>bath and body</strong>
+                        <ul class="bn-list">
+                            <li class="bn-link "> <a href="/bath-and-body-shampoo-surfactant-based/search#/?q=shampoo">Shampoo, Surfactant Based as per IS 7884<i>(Q4)</i></a></li>
+                            <li class="bn-link "> <a href="/bath-and-body-waterless-shampoo-v2-/search#/?q=shampoo">Waterless Shampoo (V2)<i>(Q4)</i></a></li>
+                            <li class="bn-link "> <a href="/bath-and-body-shampoo-soap-based/search#/?q=shampoo">Shampoo, Soap Based as per IS 7669<i>(Q4)</i></a></li>
+                            <li class="bn-link "> <a href="/bath-and-body-waterless-shampoo/search#/?q=shampoo">Waterless Shampoo as per IS 13498<i>(Q4)</i></a></li>
+                        </ul>
+                    </li>
+                    <li class="bn-group">
+                        <strong>Seating</strong>
+                        <ul class="bn-list">
+                            <li class="bn-link "> <a href="/chairs-shampoo-station/search#/?q=shampoo">Shampoo Station<i>(Q3)</i></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+'''
 
-def get_product_details(product):
-    details_dict = {}
-    title = product.find('span', class_='variant-title')
-    
-    if title:
-        details_dict['product_title'] = title.text
-        details_dict['product_brand'] = product.find('div', class_='variant-brand').text.replace('Brand:', '') if product.find('div', class_='variant-brand') else ''
-        details_dict['product_min_qty'] = product.find('div', class_='variant-moq').text.replace('Min. Qty. Per Consignee:', '') if product.find('div', class_='variant-moq') else ''
-        details_dict['product_final_price'] = product.find('span', class_='variant-list-price').text if product.find('span', class_='variant-list-price') else ''
-        details_dict['product_list_price'] = product.find('span', class_='variant-final-price').text if product.find('span', class_='variant-final-price') else ''
-        return details_dict
-    
-    return None
+soup = BeautifulSoup(html_content, 'html.parser')
 
-def process_page(link, page_number):
-    url = f"https://mkp.gem.gov.in{link}&page={page_number}"
-    content = fetch_page_content(url)
-    html_soup = BS(content, 'html.parser') if content else None
-    if html_soup.find('div', id='no-results-found'):
-        return []
-    
-    product_detail_list = []
-    product_list = html_soup.find_all('li', class_="clearfix")
-    for product in product_list:
-        details_dict = get_product_details(product)
-        if details_dict is not None:
-            product_detail_list.append(details_dict)
-    return product_detail_list
+result_dict = {}
 
-def get_products(query):
-    product_detail_list = []
-    product_pages = getPages(query)
-    
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        futures = []
-        for link in product_pages:
-            initial_url = f"https://mkp.gem.gov.in{link}"
-            initial_content = fetch_page_content(initial_url)
-            initial_soup = BS(initial_content, 'html.parser')
-            pagination_div = initial_soup.find('div', class_='pagination')
-            if pagination_div:
-                page_links = pagination_div.find_all('a')
-                page_numbers = [int(link['href'].split('=')[-1]) for link in page_links]
-                highest_page_number = max(page_numbers)
+categories = soup.find_all('li', class_='bn-group')
+for category in categories:
+    category_name = category.strong.text.strip()
+    links = category.find_all('a')
+    category_dict = {link.text.strip(): link['href'] for link in links}
+    result_dict[category_name] = category_dict
 
-                for page_number in range(1, highest_page_number + 1):
-                    futures.append(executor.submit(process_page, link, page_number))
-
-        for future in concurrent.futures.as_completed(futures):
-            product_detail_list.extend(future.result())
-
-    return product_detail_list
-
-print(time.time())
-get_products("shampoo")
-print(time.time())
+print(result_dict)

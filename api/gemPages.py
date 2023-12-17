@@ -9,15 +9,21 @@ def getPages(search_query):
 
     response = requests.get(url)
     
-    productPages = []
-    
     if response.status_code == 200:
         htmlcontent = response.text
         htmlsoup = BS(htmlcontent, 'html.parser') 
-        link_tags = htmlsoup.find_all('li', class_="bn-link")
-        
-        for link in link_tags:
-            href = link.a['href']
-            productPages.append(href)
+        result_dict = {}
+        categories = htmlsoup.find_all('li', class_='bn-group')
+        for category in categories:
+            category_name = category.find('strong').text.strip()
+            links = category.find_all('li', class_='bn-link')
             
-        return productPages
+            category_dict = {}
+            for link in links:
+                link_text = link.text.strip()
+                href = link.a['href']
+                category_dict[link_text] = href
+                result_dict[category_name] = category_dict
+
+    return (result_dict)
+    

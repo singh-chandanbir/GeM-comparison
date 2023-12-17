@@ -1,5 +1,6 @@
 from flask import Flask,render_template as rt,session, redirect, url_for, request
 from api.gemProducts import gem_products
+from api.gemPages import getPages
 app = Flask(__name__)
 
 app.secret_key = 'BCQWR#$@@WE@12332423@121'
@@ -9,13 +10,17 @@ app.secret_key = 'BCQWR#$@@WE@12332423@121'
 def landing():
     return rt('index.html')
 
-
-@app.route('/result', methods = ["POST"])
+@app.route('/categories', methods = ["POST"])
 def result():
     query = request.form.get("searchquery")
-    gemproductlist = gem_products(query)
-    table_headers = ['Title', 'Brand', 'Min Quantity', 'List Price', 'Final Price', 'Image Link', 'Product Link']
-    return rt('results.html', searchquery = query, gemproductlist = gemproductlist, table_headers = table_headers)
+    categorylist = getPages(query)
+    return rt('category_page.html', searchquery = query, categories = categorylist)
+
+@app.route('/Products', methods = ["POST"])
+def showProducts():
+    product_link = request.form.get("selected_product")
+    print("product link is: ", product_link)
+    return rt('products.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
