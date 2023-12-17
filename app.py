@@ -1,6 +1,8 @@
 from flask import Flask,render_template as rt,session, redirect, url_for, request
-from api.gemProducts import gem_products
 from api.gemPages import getPages
+from api.getPageNumber import get_page_number
+from api.gemProducts import process_page
+
 app = Flask(__name__)
 
 app.secret_key = 'BCQWR#$@@WE@12332423@121'
@@ -18,9 +20,15 @@ def result():
 
 @app.route('/Products', methods = ["POST"])
 def showProducts():
-    product_link = request.form.get("selected_product")
-    print("product link is: ", product_link)
-    return rt('products.html')
+    page_link = request.form.get("selected_product")
+    url = "https://mkp.gem.gov.in" + page_link
+    total_pages = get_page_number(url)
+    print("number of pages: ", total_pages)
+    if total_pages == None:
+        return rt("failure.html")
+    else :
+        detail_list = process_page(page_link, 1)
+        return rt('products.html', productlist = detail_list)
 
 if __name__ == '__main__':
     app.run(debug=True)

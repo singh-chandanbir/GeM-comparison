@@ -2,6 +2,12 @@
 
 {% block body %}
 
-<h2>Products will show here</h2>
+{% for product in productlist %}
+
+    {% for key, value in product.items() %}
+        {{key}} : {{value}}
+    {% endfor %}
+    <hr>
+{% endfor %}
 
 {% endblock body %}
