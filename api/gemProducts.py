@@ -19,8 +19,8 @@ def get_product_details(product):
     
     return None
 
-def process_page(link, page_number):
-    url = f"https://mkp.gem.gov.in{link}&page={page_number}"
+def process_page(link):
+    url = f"https://mkp.gem.gov.in{link}"
     response = requests.get(url)
     html_soup = BS(response.text, 'html.parser')
     
