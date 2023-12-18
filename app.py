@@ -46,4 +46,4 @@ def products_page():
     return rt('products.html', productlist = detail_list, total_pages = total_pages, current_page = current_page, page_link=page_link)
     
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=80)
