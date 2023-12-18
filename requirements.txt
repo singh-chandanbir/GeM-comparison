@@ -11,3 +11,4 @@ requests==2.31.0
 SQLAlchemy==1.4.22
 urllib3==2.1.0
 Werkzeug==2.0.1
+bs4
